@@ -3,10 +3,10 @@
 
 int main()
 {
-    printf("    .----._____.----.\n");
-    printf("___/ Resistor  Color \\___\n");
-    printf("   \\ Code Calculator /\n");
-    printf("    '----'     '----'\n");
+    printf("     .----._____.----.\n");
+    printf("____/ Resistor  Color \\____\n");
+    printf("    \\ Code Calculator /\n");
+    printf("     '----'     '----'\n");
 
     // Open band1.txt file
     char line1[500];
@@ -18,39 +18,39 @@ int main()
     }
 
     // 1st Bands Input menu
-    printf("\nEnter 1st Band color > ");
-    char band1[10];
-    fgets(band1, 10, stdin);
-    band1[strcspn(band1, "\n")] = '\0';
-
-    // 2st Bands Input menu
-    printf("Enter 2st Band color > ");
-    char band2[10];
-    fgets(band2, 10, stdin);
-    band2[strcspn(band2, "\n")] = '\0';
-
-    // multiplier input menu
-    printf("Enter a multiplier > ");
-    int multi;
-    scanf("%d", &multi);
-
-    // combine band2 into band1
-    strcat(band1, band2);
-    // convert band1 into int
-    int combine;
-    sscanf(band1, "%d", &combine);
-
-    //get the value of 10^multi
-    int n;
-    int power = 1;
-    for (n=1; n<=multi; n++)
+    int band1;
+    printf("\n# Enter 1st Band color > ");
+    scanf("%d", &band1);
+    while (band1 > 9 || band1 < 1)
     {
-        power = power * 10;
+        printf("  _\n");
+        printf(" /|\\  (%d) Not included!\n", band1);
+        printf("/_*_\\ 1st Band color > ");
+        scanf("%d", &band1);
     }
 
-    // print out the result
-    char percent[] = "%";
-    int result = combine * power;
-    printf("%d ohm ± 20%s\n", result, percent);
+    // 2st Bands Input menu
+    int band2;
+    printf("\n# Enter 2st Band color > ");
+    scanf("%d", &band2);
+    while (band2 > 9 || band2 < 0)
+    {
+        printf("  _\n");
+        printf(" /|\\  (%d) Not included!\n", band2);
+        printf("/_*_\\ 2st Band color > ");
+        scanf("%d", &band2);
+    }
+
+    // multiplier input menu
+    int multi;
+    printf("\n# Enter a Multiplier > ");
+    scanf("%d", &multi);
+    while (multi > 12 || multi < 0 )
+    {
+        printf("  _\n");
+        printf(" /|\\  (%d) Not included!\n", multi);
+        printf("/_*_\\ Multiplier > ");
+        scanf("%d", &multi);
+    }
 
 }
