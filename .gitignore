@@ -57,3 +57,5 @@ dkms.conf
 # additional
 *.vscode
 /resistor
+/try.c
+/try
