@@ -13,7 +13,7 @@ int read_txt(fpath)
 {
     char line[5000];
     FILE *hand;
-    hand = fopen(("%s", fpath), "r");
+    hand = fopen(fpath, "r");
     while (fgets(line, 5000, hand) != NULL)
     {
         printf("%s", line);
@@ -236,8 +236,8 @@ int main()
             strcat(str_band4_1, str_band4_2);
 
             // convert str_band4_2 into int
-            int combine_3b;
-            sscanf(str_band4_1, "%d", &combine_3b);
+            int combine_4b;
+            sscanf(str_band4_1, "%d", &combine_4b);
             
             // make 10^multi_4b
             // if value of multi_4b >= 0 and <= 9 (positive)
@@ -249,8 +249,8 @@ int main()
                 {
                     power_3b = power_3b * 10;
                 }
-                // multiply the combine_3b with power_3b
-                long result_3b = combine_3b * power_3b;
+                // multiply the combine_4b with power_3b
+                long result_3b = combine_4b * power_3b;
                 // print out the 4 bands result
                 char percent[] = "%";
                 printf("___________________________\n");
@@ -267,8 +267,8 @@ int main()
                 }
                 // divided 1 with fpower_3b
                 float fpowmin_3b = 1 / fpower_3b;
-                // multiply the combine_3b with fpowmin_3b
-                float result_3b = combine_3b * fpowmin_3b;
+                // multiply the combine_4b with fpowmin_3b
+                float result_3b = combine_4b * fpowmin_3b;
                 //print out the 4 bands result
                 char percent[] = "%";
                 printf("___________________________\n");
