@@ -1,52 +1,106 @@
 #include <stdio.h>
 #include <string.h>
 
-void flush_input_buffer()
-    {
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF);
-    }
+// flush input from scanf
+void flush_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+// resistor band title
+void resistor_title(char title[]) {
+    printf("\n    .--._____.--.");
+    printf("\n--=(%s)=----------", title);
+    printf("\n    '--'     '--'\n");
+}
 
 // function to read txt file
-int read_txt(fpath)
-    char fpath[];
-{
+int read_txt(char fpath[]) {
     char line[5000];
     FILE *hand;
     hand = fopen(fpath, "r");
-    while (fgets(line, 5000, hand) != NULL)
-    {
+        if (hand == NULL) {
+        printf("Error: cannot open file %s\n", fpath);
+        return 1;
+    }
+    while (fgets(line, 5000, hand) != NULL) {
         printf("%s", line);
     }
+    fclose(hand);
+    printf("\n _\n(i) Input must be a number that include in the tabel!\n");
+    return 0;
 }
 
 // functio to generate separator line
-int sline()
-{
+void sline() {
     int i;
     for (i = 1; i < 70; i++)
     {printf("=");}
 }
 
 // function for print warn ascii art
-int not_include_warn(n)
-    char n[];
-{
+void not_include_warn(char n[]) {
     printf("     _\n");
     printf("    /|\\  Option not included!\n");
     printf("   /_*_\\ %s band color > ", n);
 }
 
-int main()
-{
+// input menu
+void input_menu(int *band , char order[], int min, int max) {
+    int input_band;
+    printf("\n# Enter %s Band color > ", order);
+    input_band = scanf("%d", band);
+
+    while (*band < min || *band > max || input_band == 0) {
+        flush_input_buffer();
+        not_include_warn(order);
+        input_band = scanf("%d", band);
+    }
+}
+
+// calculate the exponent and print out the result
+void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
+    float tolerance[] = {0, 1, 2, 0.05, 0.02, 0.5, 0.25, 0.1, 0.01, 5, 10, 20};
+    int i;
+    // if value of multi_num >= 0 and <= 9 (positive)
+    if (*multi_num >= 0 && *multi_num <= 9 ) {
+        long power = 1;
+        for (i = 1; i <= *multi_num; i++) {
+            power = power * 10;
+        }
+        // *multiply the combined_num with power
+        long result_3b = *combined_num * power;
+        // print out the result
+        char percent[] = "%";
+        printf("___________________________\n");
+        printf("\n-Result = %li ohm ± %g%s\n\n", result_3b, tolerance[*tolerance_num], percent);
+    }
+
+    // if value of *multi_num >= -3 and < 0 (negative)
+    else if (*multi_num >= -3 && *multi_num < 0) {
+        float float_power = 1.0;
+        for (i = 0; i < -*multi_num; i++)
+        {
+            float_power = float_power * 10;
+        }
+        // divided 1 with float_power
+        float float_powmin = 1 / float_power;
+        // multiply the combined_num with float_powmin
+        float result_3b = *combined_num * float_powmin;
+        //print out the result
+        char percent[] = "%";
+        printf("___________________________\n");
+        printf("\n-Result = %g ohm ± %g%s\n\n", result_3b, tolerance[*tolerance_num], percent);
+    }
+}
+
+// Main function
+int main() {
     // title
     read_txt("title.txt");
-    
     int input_band;
     int num_band;
-
-    while (1)
-    {
+    while (1) {
         // separator line
         sline();
         // choose type of band
@@ -55,68 +109,34 @@ int main()
         printf("  > ");
         input_band = scanf("%d", &num_band);
 
-        if (num_band == 0)
-        {
+        if (num_band == 0) {
             printf("\nExit\n");
             break;
         }
 
         //if num_band input not include
-        else if (num_band < 3 || num_band > 6 || input_band == 0)
-        {
+        else if (num_band < 3 || num_band > 6 || input_band == 0) {
             // print out not include message
             flush_input_buffer();
             printf("  (!) Not Include!\n\n");
             continue;
         }
 
-        else if (num_band == 3)
-        {
+        else if (num_band == 3) {
             // 3 bands title
-            printf("\n    .--._____.--.");
-            printf("\n--=(|| 3 Bands  |)=----------");
-            printf("\n    '--'     '--'\n");
-
+            resistor_title("|| 3 Bands  |");
             // print out 3band.txt
             read_txt("3bands.txt");
-            // input warn
-            printf("\n _\n(i) Input must be a number that include in the tabel!\n");
 
             // 1st 3 Bands Input menu
-            int input_band3_1;
             int band3_1;
-            printf("\n# Enter 1st Band color > ");
-            input_band3_1 = scanf("%d", &band3_1);
-            while (band3_1 < 1 || band3_1 > 9 || input_band3_1 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("1st");
-                input_band3_1 = scanf("%d", &band3_1);
-            }
-        
+            input_menu(&band3_1, "1st", 1, 9);
             // 2st 3 Bands Input menu
-            int input_band3_2;
             int band3_2;
-            printf("\n# Enter 2nd Band color > ");
-            input_band3_2 = scanf("%d", &band3_2);
-            while ( band3_2 < 0 || band3_2 > 9 || input_band3_2 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("2nd");
-                input_band3_2 = scanf("%d", &band3_2);
-            }
-        
+            input_menu(&band3_2, "2nd", 0, 9);
             // multiplier 3 bands input menu
-            int input_multi_3b;
             int multi_3b;
-            printf("\n# Enter 3rd Band color > ");
-            input_multi_3b = scanf("%d", &multi_3b);
-            while (multi_3b < -3 || multi_3b > 9 || input_multi_3b == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("3rd");
-                input_multi_3b = scanf("%d", &multi_3b);
-            }
+            input_menu(&multi_3b, "3rd", -3, 9);
 
             // Convert into str
             char str_band3_1[10];
@@ -130,101 +150,29 @@ int main()
             // convert str_band3_2 into int
             int combine_3b;
             sscanf(str_band3_1, "%d", &combine_3b);
-            
-            // make 10^multi_3b
-            // if value of multi_3b >= 0 and <= 9 (positive)
-            int i;
-            if (multi_3b >= 0 && multi_3b <= 9 )
-            {
-                long power_3b = 1;
-                for (i = 1; i <= multi_3b; i++)
-                {
-                    power_3b = power_3b * 10;
-                }
-                // multiply the combine_3b with power_3b
-                long result_3b = combine_3b * power_3b;
-                // print out the 3 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %li ohm ± 20%s\n\n", result_3b, percent);
-            }
 
-            // if value of multi_3b >= -3 and < 0 (negative)
-            else if (multi_3b >= -3 && multi_3b < 0)
-            {
-                float fpower_3b = 1.0;
-                for (i = 0; multi_3b < i; multi_3b++)
-                {
-                    fpower_3b = fpower_3b * 10;
-                }
-                // divided 1 with fpower_3b
-                float fpowmin_3b = 1 / fpower_3b;
-                // multiply the combine_3b with fpowmin_3b
-                float result_3b = combine_3b * fpowmin_3b;
-                //print out the 3 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %g ohm ± 20%s\n\n", result_3b, percent); 
-            } 
+            int tolnum_3 = 11;
+            power_and_result(&multi_3b, &tolnum_3, &combine_3b);
         }
 
-        else if (num_band == 4)
-        {
+        else if (num_band == 4) {
             // 4 bands title
-            printf("\n    .--._____.--.");
-            printf("\n--=(|| 4 Bands ||)=----------");
-            printf("\n    '--'     '--'\n");
-
+            resistor_title("|| 4 Bands ||");
             // print out 4band.txt
             read_txt("4bands.txt");
-            // input warn
-            printf("\n _\n(i) Input must be a number that include in the tabel!\n");
-
+            
             // 1st 4 Bands Input menu
-            int input_band4_1;
             int band4_1;
-            printf("\n# Enter 1st Band color > ");
-            input_band4_1 = scanf("%d", &band4_1);
-            while (band4_1 < 1 || band4_1 > 9 || input_band4_1 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("1st");
-                input_band4_1 = scanf("%d", &band4_1);
-            }
+            input_menu(&band4_1, "1st", 1, 9);
             // 2st 4 Bands Input menu
-            int input_band4_2;
             int band4_2;
-            printf("\n# Enter 2nd Band color > ");
-            input_band4_2 = scanf("%d", &band4_2);
-            while ( band4_2 < 0 || band4_2 > 9 || input_band4_2 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("2nd");
-                input_band4_2 = scanf("%d", &band4_2);
-            }
+            input_menu(&band4_2, "2nd", 0, 9);
             // 3rd multiplier 4 bands input menu
-            int input_multi_4b;
             int multi_4b;
-            printf("\n# Enter 3rd Band color > ");
-            input_multi_4b = scanf("%d", &multi_4b);
-            while (multi_4b < -3 || multi_4b > 9 || input_multi_4b == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("3rd");
-                input_multi_4b = scanf("%d", &multi_4b);
-            }
+            input_menu(&multi_4b, "3rd", -3, 9);
             // 4th Tolerance 4 bands input menu
-            float tolerance_4b[] = {0, 1, 2, 0.05, 0.02, 0.5, 0.25, 0.1, 0.01, 5, 10};
-            int input_tolnum_4b;
             int tolnum_4b;
-            printf("\n# Enter 4th Band color > ");
-            input_tolnum_4b = scanf("%d", &tolnum_4b);
-            while (tolnum_4b < 1 || tolnum_4b > 10 || input_tolnum_4b == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("4th");
-                input_tolnum_4b = scanf("%d", &tolnum_4b);
-            }
+            input_menu(&tolnum_4b, "4th", 1, 9);
 
             // Convert into str
             char str_band4_1[10];
@@ -239,114 +187,30 @@ int main()
             int combine_4b;
             sscanf(str_band4_1, "%d", &combine_4b);
             
-            // make 10^multi_4b
-            // if value of multi_4b >= 0 and <= 9 (positive)
-            int i;
-            if (multi_4b >= 0 && multi_4b <= 9 )
-            {
-                long power_3b = 1;
-                for (i = 1; i <= multi_4b; i++)
-                {
-                    power_3b = power_3b * 10;
-                }
-                // multiply the combine_4b with power_3b
-                long result_3b = combine_4b * power_3b;
-                // print out the 4 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %li ohm ± %g%s\n\n", result_3b, tolerance_4b[tolnum_4b], percent);
-            }
-
-            // if value of multi_4b >= -3 and < 0 (negative)
-            else if (multi_4b >= -3 && multi_4b < 0)
-            {
-                float fpower_3b = 1.0;
-                for (i = 0; multi_4b < i; multi_4b++)
-                {
-                    fpower_3b = fpower_3b * 10;
-                }
-                // divided 1 with fpower_3b
-                float fpowmin_3b = 1 / fpower_3b;
-                // multiply the combine_4b with fpowmin_3b
-                float result_3b = combine_4b * fpowmin_3b;
-                //print out the 4 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %g ohm ± %g%s\n\n", result_3b, tolerance_4b[tolnum_4b], percent);
-            } 
+            power_and_result(&multi_4b, &tolnum_4b, &combine_4b);
         }
 
-        if (num_band == 5)
-        {
+        if (num_band == 5) {
             // 5 bands title
-            printf("\n    .--._____.--.");
-            printf("\n--=(|||5 Bands ||)=----------");
-            printf("\n    '--'     '--'\n");
+            resistor_title("|||5 Bands ||");
             // print out 5bands.txt
             read_txt("5bands.txt");
-            // input warn
-            printf("\n _\n(i) Input must be a number that include in the tabel!\n");
-
+            
             // 1st 5 Bands Input menu
-            int input_band5_1;
             int band5_1;
-            printf("\n# Enter 1st Band color > ");
-            input_band5_1 = scanf("%d", &band5_1);
-            while (band5_1 < 1 || band5_1 > 9 || input_band5_1 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("1st");   
-                input_band5_1 = scanf("%d", &band5_1);
-            }
-
+            input_menu(&band5_1, "1st", 1, 9);
             // 2st 5 Bands Input menu
-            int input_band5_2;
             int band5_2;
-            printf("\n# Enter 2nd Band color > ");
-            input_band5_2 = scanf("%d", &band5_2);
-            while ( band5_2 < 0 || band5_2 > 9 || input_band5_2 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("2nd");
-                input_band5_2 = scanf("%d", &band5_2);
-            }
-
+            input_menu(&band5_2, "2nd", 0, 9);
             // 3rd 5 bands input menu
-            int input_band5_3;
             int band5_3;
-            printf("\n# Enter 3rd Band color > ");
-            input_band5_3 = scanf("%d", &band5_3);
-            while (band5_3 < 0 || band5_3 > 9 || input_band5_3 == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("3rd");
-                input_band5_3 = scanf("%d", &band5_3);
-            }
-
+            input_menu(&band5_3, "3rd", 0, 9);
             // 4th multiplier 5 bands input menu
-            int input_multi_5b;
             int multi_5b;
-            printf("\n# Enter 4rd Band color > ");
-            input_multi_5b = scanf("%d", &multi_5b);
-            while (multi_5b < -3 || multi_5b > 9 || input_multi_5b == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("4th");
-                input_multi_5b = scanf("%d", &multi_5b);
-            }
-
+            input_menu(&multi_5b, "4th", -3, 9);
             // 5th Tolerance 5 bands input menu
-            float tolerance_5b[] = {0, 1, 2, 0.05, 0.02, 0.5, 0.25, 0.1, 0.01, 5, 10};
-            int input_tolnum_5b;
             int tolnum_5b;
-            printf("\n# Enter 5th Band color > ");
-            input_tolnum_5b = scanf("%d", &tolnum_5b);
-            while (tolnum_5b < 1 || tolnum_5b > 10 || input_tolnum_5b == 0)
-            {
-                flush_input_buffer();
-                not_include_warn("5th");
-               input_tolnum_5b = scanf("%d", &tolnum_5b);
-            }
+            input_menu(&tolnum_5b, "5th", 1, 10);
 
             // Convert into str
             char str_band5_1[10];
@@ -363,44 +227,7 @@ int main()
             int combine_5b;
             sscanf(str_band5_1 ,"%d", &combine_5b);
 
-            // make 10^multi_4b
-            // if value of multi_4b >= 0 and <= 9 (positive)
-            int i;
-            if (multi_5b >= 0 && multi_5b <= 9 )
-            {
-                long power_5b = 1;
-                for (i = 1; i <= multi_5b; i++)
-                {
-                    power_5b = power_5b * 10;
-                }
-                // multiply the combine_5b with power_5b
-                long result_5b = combine_5b * power_5b;
-                // print out the 4 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %li ohm ± %g%s\n\n", result_5b, tolerance_5b[tolnum_5b], percent);  
-            }
-
-            // if value of multi_5b >= -3 and < 0 (negative)
-            else if (multi_5b >= -3 && multi_5b < 0)
-            {
-                float fpower_5b = 1.0;
-                for (i = 0; multi_5b < i; multi_5b++)
-                {
-                    fpower_5b = fpower_5b * 10;
-                }
-                // divided 1 with fpower_5b
-                float fpowmin_5b = 1 / fpower_5b;
-                // multiply the combine_5b with fpowmin_5b
-                float result_3b = combine_5b * fpowmin_5b;
-                //print out the 4 bands result
-                char percent[] = "%";
-                printf("___________________________\n");
-                printf("\n-Result = %g ohm ± %g%s\n\n", result_3b, tolerance_5b[tolnum_5b], percent); 
-            }
-
+            power_and_result(&multi_5b, &tolnum_5b, &combine_5b);
         }
-
     }
-    
 }
