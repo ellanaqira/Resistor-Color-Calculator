@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// flush input from scanf
+// flush the buffer from scanf to avoid infinite loops
 void flush_input_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -70,10 +70,17 @@ void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
         }
         // *multiply the combined_num with power
         long result_3b = *combined_num * power;
+        // minimum value
+        float min = result_3b - (result_3b * (tolerance[*tolerance_num]) / 100);
+        // maximum value
+        float max = result_3b + (result_3b * (tolerance[*tolerance_num]) / 100);
         // print out the result
         char percent[] = "%";
         printf("___________________________\n");
-        printf("\n-Result = %li ohm ± %g%s\n\n", result_3b, tolerance[*tolerance_num], percent);
+        printf("\n-Resistance = %li ohms\n", result_3b);
+        printf("-Tolerance  = ± %g%s\n", tolerance[*tolerance_num], percent);
+        printf("-Minimum    = %g ohms\n", min);
+        printf("-Maximum    = %g ohms\n\n", max);
     }
 
     // if value of *multi_num >= -3 and < 0 (negative)
@@ -87,10 +94,17 @@ void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
         float float_powmin = 1 / float_power;
         // multiply the combined_num with float_powmin
         float result_3b = *combined_num * float_powmin;
+        // minimum value
+        float min = result_3b - (result_3b * (tolerance[*tolerance_num]) / 100);
+        // maximum value
+        float max = result_3b + (result_3b * (tolerance[*tolerance_num]) / 100);
         //print out the result
         char percent[] = "%";
         printf("___________________________\n");
-        printf("\n-Result = %g ohm ± %g%s\n\n", result_3b, tolerance[*tolerance_num], percent);
+        printf("\n-Resistance = %g ohms\n", result_3b);
+        printf("-Tolerance  = ± %g%s\n", tolerance[*tolerance_num], percent);
+        printf("-Minimum    = %g ohms\n", min);
+        printf("-Maximum    = %g ohms\n\n", max);
     }
 }
 
