@@ -59,8 +59,9 @@ void input_menu(int *band , char order[], int min, int max) {
 }
 
 // calculate the exponent and print out the result
-void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
+void power_and_result(int *multi_num, int *tolerance_num, int*tempco_num, int *combined_num) {
     float tolerance[] = {0, 1, 2, 0.05, 0.02, 0.5, 0.25, 0.1, 0.01, 5, 10, 20};
+    int tempco[] = {250, 100, 50, 15, 25, 20, 10, 5, 1, 0};
     int i;
     // if value of multi_num >= 0 and <= 9 (positive)
     if (*multi_num >= 0 && *multi_num <= 9 ) {
@@ -80,7 +81,8 @@ void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
         printf("\n-Resistance = %li ohms\n", result_3b);
         printf("-Tolerance  = ± %g%s\n", tolerance[*tolerance_num], percent);
         printf("-Minimum    = %g ohms\n", min);
-        printf("-Maximum    = %g ohms\n\n", max);
+        printf("-Maximum    = %g ohms\n", max);
+        printf("-Tempco     = %d ppm/k\n\n", tempco[*tempco_num]);
     }
 
     // if value of *multi_num >= -3 and < 0 (negative)
@@ -104,7 +106,8 @@ void power_and_result(int *multi_num, int *tolerance_num, int *combined_num) {
         printf("\n-Resistance = %g ohms\n", result_3b);
         printf("-Tolerance  = ± %g%s\n", tolerance[*tolerance_num], percent);
         printf("-Minimum    = %g ohms\n", min);
-        printf("-Maximum    = %g ohms\n\n", max);
+        printf("-Maximum    = %g ohms\n", max);
+        printf("-Tempco     = %d ppm/k\n\n", tempco[*tempco_num]);
     }
 }
 
@@ -160,13 +163,14 @@ int main() {
 
             // combine str_band3_2 into str_band3_1
             strcat(str_band3_1, str_band3_2);
-
             // convert str_band3_2 into int
             int combine_3b;
             sscanf(str_band3_1, "%d", &combine_3b);
 
+            //calculate the exponent and print out the results
             int tolnum_3 = 11;
-            power_and_result(&multi_3b, &tolnum_3, &combine_3b);
+            int tempco_3 = 9;
+            power_and_result(&multi_3b, &tolnum_3, &tempco_3, &combine_3b);
         }
 
         else if (num_band == 4) {
@@ -196,15 +200,16 @@ int main() {
 
             // combine str_band4_2 into str_band4_1
             strcat(str_band4_1, str_band4_2);
-
             // convert str_band4_2 into int
             int combine_4b;
             sscanf(str_band4_1, "%d", &combine_4b);
             
-            power_and_result(&multi_4b, &tolnum_4b, &combine_4b);
+            // calculate the exponent and print out the results
+            int tempco_4 = 9;
+            power_and_result(&multi_4b, &tolnum_4b, &tempco_4, &combine_4b);
         }
 
-        if (num_band == 5) {
+        else if (num_band == 5) {
             // 5 bands title
             resistor_title("|||5 Bands ||");
             // print out 5bands.txt
@@ -241,7 +246,52 @@ int main() {
             int combine_5b;
             sscanf(str_band5_1 ,"%d", &combine_5b);
 
-            power_and_result(&multi_5b, &tolnum_5b, &combine_5b);
+            // calculate the exponent and print out the results
+            int tempco_5 = 9;
+            power_and_result(&multi_5b, &tolnum_5b, &tempco_5, &combine_5b);
+        }
+
+        else if (num_band == 6) {
+            // 6 bands title
+            resistor_title("|||6 Bands|||");
+            // print out 6bands.txt
+            read_txt("6bands.txt");
+            
+            // 1st 6 Bands Input menu
+            int band6_1;
+            input_menu(&band6_1, "1st", 1, 9);
+            // 2st 6 Bands Input menu
+            int band6_2;
+            input_menu(&band6_2, "2nd", 0, 9);
+            // 3rd 6 bands input menu
+            int band6_3;
+            input_menu(&band6_3, "3rd", 0, 9);
+            // 4th multiplier 6 bands input menu
+            int multi_6b;
+            input_menu(&multi_6b, "4th", -3, 9);
+            // 6th Tolerance 6 bands input menu
+            int tolnum_6b;
+            input_menu(&tolnum_6b, "5th", 1, 10);
+            int tempco_6;
+            input_menu(&tempco_6, "6th", 0, 8);
+
+            // Convert into str
+            char str_band6_1[10];
+            char str_band6_2[10];
+            char str_band6_3[10];
+            sprintf(str_band6_1, "%d", band6_1);
+            sprintf(str_band6_2, "%d", band6_2);
+            sprintf(str_band6_3, "%d", band6_3);
+
+            // combine str_band6_3 and str_band6_2 into str_band6_1
+            strcat(str_band6_2, str_band6_3);
+            strcat(str_band6_1, str_band6_2);
+            // convert into int
+            int combine_6b;
+            sscanf(str_band6_1 ,"%d", &combine_6b);
+
+            // calculate the exponent and print out the results
+            power_and_result(&multi_6b, &tolnum_6b, &tempco_6, &combine_6b);
         }
     }
 }
