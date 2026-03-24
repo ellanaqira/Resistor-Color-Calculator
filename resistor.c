@@ -122,12 +122,12 @@ int main() {
         sline();
         // choose type of band
         printf("\n# Select the number of band\n");
-        printf("  [ 3 bands = 3\t\t  ]\n  [ 4 bands = 4\t\t  ]\n  [ 5 bands = 5\t\t  ]\n  [ 6 bands = 6\t\t  ]\n  [ Exit    = 0\t\t  ]\n");
+        printf("  [_3_bands_=_3______]\n  [_4_bands_=_4______]\n  [_5_bands_=_5______]\n  [_6_bands_=_6______]\n  [_Exit____=_0______]\n");
         printf("  > ");
         input_band = scanf("%d", &num_band);
 
         if (num_band == 0) {
-            printf("\nExit\n");
+            printf("\nExit\n\n");
             break;
         }
 
